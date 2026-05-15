@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { SlidersHorizontal, MapPin, Star, Wallet, CheckCircle2, ArrowRightLeft, Heart, ChevronRight, Edit3 } from 'lucide-react';
+import { SlidersHorizontal, MapPin, Star, Wallet, CheckCircle2, ArrowRightLeft, Heart, ChevronRight, Edit3, LocateFixed } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
 
 import { calculateDistance } from '../utils';
@@ -9,8 +9,14 @@ import { useLocation } from '../contexts/LocationContext';
 
 export const Results = () => {
   const navigate = useNavigate();
-  const { userLocation } = useLocation();
+  const { userLocation, isLoading, error, requestLocation } = useLocation();
   const [selectedIds, setSelectedIds] = useState<string[]>(['1', '2']);
+
+  React.useEffect(() => {
+    if (!userLocation) {
+      requestLocation();
+    }
+  }, [userLocation, requestLocation]);
 
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => 
@@ -36,7 +42,25 @@ export const Results = () => {
       <div className="mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-primary">Hasil Rekomendasi Destinasi</h1>
         <p className="text-lg text-on-surface-variant mt-3 max-w-3xl">Berdasarkan preferensi Anda, berikut adalah urutan destinasi yang paling cocok. Jarak dihitung dari lokasi terdeteksi Anda.</p>
-        {!userLocation && <p className="text-sm text-amber-600 font-semibold mt-2">Catatan: Deteksi lokasi belum aktif, jarak tampil sebagai 0km.</p>}
+        {!userLocation ? (
+          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <button 
+              onClick={requestLocation}
+              disabled={isLoading}
+              className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50"
+            >
+              <LocateFixed className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              {isLoading ? 'Mendeteksi Lokasi...' : 'Aktifkan Deteksi Lokasi'}
+            </button>
+            {error && <p className="text-sm text-error font-medium italic">Gagal: {error}</p>}
+            {!isLoading && !error && <p className="text-sm text-amber-600 font-semibold italic">Catatan: Deteksi lokasi belum aktif, jarak tampil sebagai 0km.</p>}
+          </div>
+        ) : (
+          <div className="mt-4 flex items-center gap-2 text-sm text-secondary font-bold bg-secondary/10 w-fit px-4 py-2 rounded-lg">
+            <CheckCircle2 className="w-4 h-4" />
+            Lokasi Berhasil Terdeteksi
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -112,7 +136,7 @@ export const Results = () => {
                     <span className="text-outline-variant hidden sm:block">•</span>
                     <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
                       <MapPin className="w-4 h-4 text-secondary" />
-                      {dest.distance > 0 ? `${dest.distance.toLocaleString('id-ID')} km` : ' डिटेक्ट Lokasi...'}
+                      {dest.distance > 0 ? `${dest.distance.toLocaleString('id-ID')} km` : 'Mendeteksi Lokasi...'}
                     </div>
                     <span className="text-outline-variant hidden sm:block">•</span>
                     <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">

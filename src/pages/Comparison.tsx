@@ -1,30 +1,66 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Wallet, MapPin, Star, Hotel, CheckCircle2, ChevronRight, Info, ArrowRightLeft } from 'lucide-react';
+import { Wallet, MapPin, Star, Hotel, CheckCircle2, ChevronRight, Info, ArrowRightLeft, LocateFixed } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
+import { useLocation } from '../contexts/LocationContext';
+import { calculateDistance } from '../utils';
 
 export const Comparison = () => {
-  const selectedDestinations = DESTINATIONS.slice(0, 3); // Showing first 3 for UI demo
+  const { userLocation, isLoading, error, requestLocation } = useLocation();
+
+  const comparedDestinations = useMemo(() => {
+    return DESTINATIONS.slice(0, 3).map(dest => {
+      let distance = 0;
+      if (userLocation) {
+        distance = calculateDistance(
+          userLocation.lat,
+          userLocation.lng,
+          dest.coordinates.lat,
+          dest.coordinates.lng
+        );
+      }
+      return { ...dest, calculatedDistance: distance };
+    });
+  }, [userLocation]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-16 space-y-12">
-      <div className="text-center max-w-2xl mx-auto space-y-4">
+      <div className="text-center max-w-2xl mx-auto space-y-6">
         <h1 className="text-4xl md:text-5xl font-bold text-primary">Bandingkan Destinasi</h1>
         <p className="text-lg text-on-surface-variant">Evaluasi pilihan perjalanan Anda berdampingan untuk menemukan destinasi yang paling sesuai dengan preferensi Anda.</p>
+        
+        {!userLocation && (
+          <div className="flex flex-col items-center gap-3">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                requestLocation();
+              }}
+              disabled={isLoading}
+              className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+            >
+              <LocateFixed className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+              {isLoading ? 'Mendeteksi Lokasi...' : 'Deteksi Lokasi Saya'}
+            </button>
+            {error && (
+              <p className="text-sm text-error font-medium">Gagal mendeteksi lokasi: {error}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="overflow-x-auto pb-10">
         <div className="min-w-[900px] grid grid-cols-4 gap-8 items-start">
-          {/* Sticky Column: Attributes */}
+          {/* Column: Attributes */}
           <div className="space-y-4 mt-[230px]">
             <div className="h-16 flex items-center px-4 font-bold text-sm text-on-surface-variant bg-surface-container-low rounded-lg">Budget Estimasi</div>
-            <div className="h-16 flex items-center px-4 font-bold text-sm text-on-surface-variant bg-surface rounded-lg">Jarak dari Pusat</div>
+            <div className="h-16 flex items-center px-4 font-bold text-sm text-on-surface-variant bg-surface rounded-lg">Jarak dari Anda</div>
             <div className="h-[140px] flex items-start pt-4 px-4 font-bold text-sm text-on-surface-variant bg-surface-container-low rounded-lg">Fasilitas Utama</div>
             <div className="h-16 flex items-center px-4 font-bold text-sm text-on-surface-variant bg-surface rounded-lg">Rating Pengunjung</div>
           </div>
 
-          {selectedDestinations.map(dest => (
+          {comparedDestinations.map(dest => (
             <motion.div 
               key={dest.id}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -51,8 +87,12 @@ export const Comparison = () => {
                 {/* Distance */}
                 <div className="h-16 flex items-center justify-center bg-surface rounded-lg">
                   <span className="text-sm font-medium text-on-surface flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-outline" />
-                    {dest.distance} km
+                    <MapPin className="w-4 h-4 text-secondary" />
+                    {userLocation ? (
+                      <span className="font-bold">{dest.calculatedDistance} km</span>
+                    ) : (
+                      <span className="text-xs text-on-surface-variant italic">Lokasi belum terdeteksi</span>
+                    )}
                   </span>
                 </div>
 

@@ -14,7 +14,7 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const requestLocation = () => {
+  const requestLocation = React.useCallback(() => {
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser');
       return;
@@ -34,9 +34,9 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setError(err.message);
         setIsLoading(false);
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-  };
+  }, []);
 
   return (
     <LocationContext.Provider value={{ userLocation, isLoading, error, requestLocation }}>
