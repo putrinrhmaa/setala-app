@@ -1,0 +1,6 @@
+{
+  "name": "Setala",
+  "description": "Smart Travel Decision Support System to help you find the best destination in Indonesia.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": []
+}

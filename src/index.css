@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+
+  --color-primary: #002045;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #1a365d;
+  --color-on-primary-container: #86a0cd;
+  
+  --color-secondary: #13696a;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #a2eded;
+  --color-on-secondary-container: #1a6d6e;
+
+  --color-tertiary: #1b2127;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #30363c;
+  --color-on-tertiary-container: #989fa6;
+
+  --color-surface: #faf9fd;
+  --color-on-surface: #1a1c1e;
+  --color-on-surface-variant: #43474e;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f7;
+  --color-surface-container: #efedf1;
+  --color-surface-container-high: #e9e7eb;
+  --color-surface-container-highest: #e3e2e6;
+  
+  --color-outline: #74777f;
+  --color-outline-variant: #c4c6cf;
+  
+  --color-background: #faf9fd;
+  --color-on-background: #1a1c1e;
+
+  --radius-xl: 1.5rem;
+  --radius-lg: 1rem;
+  --radius-md: 0.75rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
