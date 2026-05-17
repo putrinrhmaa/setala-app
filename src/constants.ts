@@ -13,6 +13,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Budaya', 'Sejarah', 'Edukasi'],
     matchScore: 95,
     facilities: ['Wi-Fi', 'Pemandu Wisata', 'Area Parkir', 'Toilet'],
+    culture: 'Warisan Budaya Buddha tertua di dunia dengan arsitektur Javanese-Buddhist yang megah.',
+    food: ['Gudeg Magelang', 'Bakpia Pathok', 'Sego Megono'],
+    language: 'Bahasa Jawa & Indonesia',
     coordinates: { lat: -7.607, lng: 110.203 }
   },
   {
@@ -27,6 +30,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Bahari', 'Petualangan', 'Eksotis'],
     matchScore: 92,
     facilities: ['Diving Center', 'Resort', 'Perahu Wisata'],
+    culture: 'Kesenian ukir kayu suku Asmat dan musik petikan tradisional Papua yang khas.',
+    food: ['Papeda', 'Ikan Kuah Kuning', 'Sagu Sep'],
+    language: 'Bahasa Papua & Indonesia',
     coordinates: { lat: -0.231, lng: 130.518 }
   },
   {
@@ -41,6 +47,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Alam', 'Satwa', 'Hiking'],
     matchScore: 90,
     facilities: ['Pemandu Wisata', 'Kantin', 'Toilet'],
+    culture: 'Kultur masyarakat pesisir Manggarai yang hidup berdampingan dengan alam liar.',
+    food: ['Seafood Bakar', 'Kopi Flores', 'Jagung Bose'],
+    language: 'Bahasa Manggarai & NTT',
     coordinates: { lat: -8.583, lng: 119.5 }
   },
   {
@@ -51,10 +60,13 @@ export const DESTINATIONS: Destination[] = [
     price: 2500000,
     distance: 0,
     rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1602154663343-89fe00095811?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1602641021461-12503957eb6a?q=80&w=2070&auto=format&fit=crop',
     tags: ['Pegunungan', 'Fotografi', 'Petualangan'],
     matchScore: 88,
     facilities: ['Jeep Sewa', 'Kuda', 'Toilet', 'Warung Makan'],
+    culture: 'Upacara Kasada dari Suku Tengger yang memuja Dewa di kawah Bromo.',
+    food: ['Bakso Malang', 'Nasi Campur Bromo', 'Jagung Bakar'],
+    language: 'Bahasa Jawa Tengger',
     coordinates: { lat: -7.942, lng: 112.953 }
   },
   {
@@ -69,6 +81,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Danau', 'Budaya', 'Keluarga'],
     matchScore: 85,
     facilities: ['Kapal Wisata', 'Hotel', 'Restoran'],
+    culture: 'Rumah adat Bolon dan pertunjukan boneka Sigale-gale khas suku Batak Toba.',
+    food: ['Arsik Ikan Mas', 'Mie Gomak', 'Dali ni Horbo'],
+    language: 'Bahasa Batak Toba',
     coordinates: { lat: 2.684, lng: 98.847 }
   },
   {
@@ -83,6 +98,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Pura', 'Pantai', 'Religi'],
     matchScore: 87,
     facilities: ['Area Parkir', 'Toko Suvenir', 'Toilet'],
+    culture: 'Tradisi Odalan dan ritual sembahyang harian umat Hindu Bali di tepi samudra.',
+    food: ['Ayam Betutu', 'Sate Lilit', 'Babi Guling'],
+    language: 'Bahasa Bali & Indonesia',
     coordinates: { lat: -8.621, lng: 115.086 }
   },
   {
@@ -97,6 +115,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Bahari', 'Diving', 'Relaksasi'],
     matchScore: 84,
     facilities: ['Diving Boat', 'Resort', 'Wi-Fi'],
+    culture: 'Kehidupan suku Bajo, para pengembara laut yang legendaris di Nusantara.',
+    food: ['Kasami', 'Sinonggi', 'Lapa-lapa'],
+    language: 'Bahasa Wakatobi & Bajo',
     coordinates: { lat: -5.603, lng: 123.63 }
   },
   {
@@ -111,6 +132,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Pantai', 'Sailing', 'Gourmet'],
     matchScore: 89,
     facilities: ['Kapal Phinisi', 'Bandara Internasional', 'Hotel Mewah'],
+    culture: 'Perpaduan budaya maritim dan pegunungan Manggarai di Barat Flores.',
+    food: ['Seafood Platter', 'Kopi Juria', 'Ikan Cara'],
+    language: 'Bahasa Manggarai',
     coordinates: { lat: -8.490, lng: 119.880 }
   },
   {
@@ -125,6 +149,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Penyu', 'Bahari', 'Ubur-ubur'],
     matchScore: 83,
     facilities: ['Homestay', 'Alat Snorkeling', 'Pemandu Lokal'],
+    culture: 'Kultur pesisir Kalimantan yang sangat bergantung pada kelestarian penyu.',
+    food: ['Tehe-tehe', 'Elai', 'Seafood Segar'],
+    language: 'Bahasa Melayu Berau',
     coordinates: { lat: 2.285, lng: 118.238 }
   },
   {
@@ -135,10 +162,13 @@ export const DESTINATIONS: Destination[] = [
     price: 6000000,
     distance: 0,
     rating: 4.6,
-    imageUrl: 'https://images.unsplash.com/photo-1544551763-8034dbca4841?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1629236467006-25807490076c?q=80&w=2070&auto=format&fit=crop',
     tags: ['Bahari', 'Snorkeling', 'Wall Diving'],
     matchScore: 81,
     facilities: ['Sewa Alat Selam', 'Transportasi Perahu', 'Warung Makan'],
+    culture: 'Kultur Minahasa yang kaya akan sejarah perdagangan rempah dan musik Kolintang.',
+    food: ['Bubur Manado', 'Cakalang Fufu', 'Klappertaart'],
+    language: 'Bahasa Manado',
     coordinates: { lat: 1.616, lng: 124.757 }
   },
   {
@@ -153,6 +183,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Pantai', 'Tebing', 'Instagenic'],
     matchScore: 94,
     facilities: ['Penyewaan Motor', 'Tour Lokal', 'Restoran'],
+    culture: 'Tradisi spiritual Bali yang sangat kuat dengan banyak pura suci di dinding tebing.',
+    food: ['Ikan Bakar', 'Tipat Cantok', 'Sate Renteng'],
+    language: 'Bahasa Bali Alus',
     coordinates: { lat: -8.728, lng: 115.544 }
   },
   {
@@ -163,10 +196,13 @@ export const DESTINATIONS: Destination[] = [
     price: 5500000,
     distance: 0,
     rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1512100356956-c12872638f33?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1534008757030-27299c4371b6?q=80&w=2070&auto=format&fit=crop',
     tags: ['Pantai', 'Nightlife', 'Snorkeling'],
     matchScore: 91,
     facilities: ['Sewa Sepeda', 'Cidomo', 'Bar Tepi Pantai'],
+    culture: 'Perpaduan budaya Sasak lokal dengan komunitas traveler global yang santai.',
+    food: ['Ayam Taliwang', 'Plecing Kangkung', 'Sate Rembiga'],
+    language: 'Bahasa Sasak & Inggris',
     coordinates: { lat: -8.351, lng: 116.039 }
   },
   {
@@ -177,10 +213,13 @@ export const DESTINATIONS: Destination[] = [
     price: 6500000,
     distance: 0,
     rating: 4.9,
-    imageUrl: 'https://images.unsplash.com/photo-1582236528741-f7626359f481?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1554486855-33ec7c81604a?q=80&w=2070&auto=format&fit=crop',
     tags: ['Mendaki', 'Alam', 'Danau'],
     matchScore: 88,
     facilities: ['Pemandu Gunung', 'Camping Gear', 'Porter'],
+    culture: 'Mitos Dewi Anjani yang sakral bagi masyarakat Lombok dan pendaki.',
+    food: ['Ayam Taliwang', 'Sate Bulayak', 'Nasi Balap Puyung'],
+    language: 'Bahasa Sasak',
     coordinates: { lat: -8.411, lng: 116.457 }
   },
   {
@@ -191,10 +230,13 @@ export const DESTINATIONS: Destination[] = [
     price: 3000000,
     distance: 0,
     rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1580556108169-95dc693165b4?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1627914022830-745a3375b47a?q=80&w=2070&auto=format&fit=crop',
     tags: ['Budaya', 'Dingin', 'Alam'],
     matchScore: 86,
     facilities: ['Homestay', 'Area Parkir', 'Warung Kopi'],
+    culture: 'Fenomena bocah rambut gimbal dan upacara pemotongan rambut di Dieng Culture Festival.',
+    food: ['Mie Ongklok', 'Carica', 'Kripik Jamur'],
+    language: 'Bahasa Jawa Ngoko',
     coordinates: { lat: -7.218, lng: 109.916 }
   },
   {
@@ -205,10 +247,13 @@ export const DESTINATIONS: Destination[] = [
     price: 5000000,
     distance: 0,
     rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1598463935392-4b2046ca9f63?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?q=80&w=2070&auto=format&fit=crop',
     tags: ['Pantai', 'Geopark', 'Fotografi'],
     matchScore: 89,
     facilities: ['Sewa Perahu', 'Hotel', 'Seafood'],
+    culture: 'Budaya literasi Laskar Pelangi dan sejarah tambang timah yang bersejarah.',
+    food: ['Mie Belitung', 'Kopi Joss', 'Gangan Ikan'],
+    language: 'Bahasa Melayu Belitung',
     coordinates: { lat: -2.741, lng: 107.618 }
   },
   {
@@ -223,6 +268,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Budaya', 'Sejarah', 'Antropologi'],
     matchScore: 84,
     facilities: ['Pemandu Adat', 'Hotel Lokal', 'Transportasi'],
+    culture: 'Ritual Rambu Solo, perayaan kematian paling spektakuler di dunia dengan pengorbanan kerbau.',
+    food: ['Pa\'piong', 'Kopi Toraja', 'Jammala'],
+    language: 'Bahasa Toraja',
     coordinates: { lat: -2.981, lng: 119.897 }
   },
   {
@@ -233,10 +281,13 @@ export const DESTINATIONS: Destination[] = [
     price: 9500000,
     distance: 0,
     rating: 4.9,
-    imageUrl: 'https://images.unsplash.com/photo-1570533136641-42082cac88bb?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1518384400537-88f61a15320d?q=80&w=2070&auto=format&fit=crop',
     tags: ['Satwa', 'Sungai', 'Edukasi'],
     matchScore: 87,
     facilities: ['Kapal Klotok', 'Koki Kapal', 'Pemandu Liar'],
+    culture: 'Budaya sungai suku Dayak dan konservasi orangutan di jantung Kalimantan.',
+    food: ['Wadi Ikan', 'Juhu Singkah', 'Soto Banjar'],
+    language: 'Bahasa Dayak & Banjar',
     coordinates: { lat: -2.859, lng: 111.902 }
   },
   {
@@ -251,6 +302,9 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Bahari', 'Relaksasi', 'Hiu'],
     matchScore: 85,
     facilities: ['Ferry Cepat', 'Homestay', 'Alat Snorkeling'],
+    culture: 'Kultur masyarakat nelayan Jawa yang damai dengan tradisi pembuatan kapal kayu.',
+    food: ['Pindang Serani', 'Tahu Bakso', 'Ikan Bakar Pesisir'],
+    language: 'Bahasa Jawa Pesisir',
     coordinates: { lat: -5.857, lng: 110.439 }
   },
   {
@@ -261,10 +315,13 @@ export const DESTINATIONS: Destination[] = [
     price: 3500000,
     distance: 0,
     rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1621644788339-4978168bb56d?q=80&w=2070&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1549420546-24e03ce6df97?q=80&w=2073&auto=format&fit=crop',
     tags: ['Gunung', 'Belerang', 'Mendaki'],
     matchScore: 88,
     facilities: ['Masker Gas', 'Ojek Troli', 'Warung'],
+    culture: 'Kehidupan keras penambang belerang dan tradisi Gandrung dari suku Osing.',
+    food: ['Nasi Tempong', 'Pecel Pitik', 'Rujak Soto'],
+    language: 'Bahasa Jawa Osing',
     coordinates: { lat: -8.058, lng: 114.242 }
   },
   {
@@ -279,6 +336,26 @@ export const DESTINATIONS: Destination[] = [
     tags: ['Eksotis', 'Bulan Madu', 'Bahari'],
     matchScore: 93,
     facilities: ['Resort Terapung', 'Restoran', 'Tour Kano'],
+    culture: 'Musik Tifa dan keramahan suku Alifuru di pulau Seram yang eksotis.',
+    food: ['Papeda', 'Sagu Kasbi', 'Rujak Natsepa'],
+    language: 'Bahasa Seram & Melayu Maluku',
     coordinates: { lat: -2.992, lng: 129.136 }
+  },
+  {
+    id: '22',
+    name: 'Pulau Seribu',
+    location: 'DKI Jakarta',
+    description: 'Gugusan pulau di utara Jakarta dengan pantai pasir putih and spot snorkeling yang asri.',
+    price: 2000000,
+    distance: 0,
+    rating: 4.6,
+    imageUrl: 'https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?q=80&w=1932&auto=format&fit=crop',
+    tags: ['Pantai', 'Bahari', 'Snorkeling'],
+    matchScore: 86,
+    facilities: ['Speedboat', 'Resort Pulau', 'Alat Snorkeling'],
+    culture: 'Kultur pesisir Betawi yang modern namun tetap menjaga kearifan lokal kelautan.',
+    food: ['Soto Betawi', 'Kerak Telor', 'Seafood Panggang'],
+    language: 'Bahasa Betawi & Indonesia',
+    coordinates: { lat: -5.617, lng: 106.617 }
   }
 ];

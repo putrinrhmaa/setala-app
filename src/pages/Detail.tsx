@@ -1,16 +1,25 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, Star, MapPin, Wallet, Route, Thermometer, Wifi, Waves, Hotel, Utensils, CircleParking, Clock, Heart, ArrowRight, ExternalLink, Grid3X3 } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Wallet, Route, Thermometer, Wifi, Waves, Hotel, Utensils, CircleParking, Clock, Heart, ArrowRight, ExternalLink, Grid3X3, ShoppingCart, Users } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
 
 import { calculateDistance } from '../utils';
 import { useLocation } from '../contexts/LocationContext';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 export const Detail = () => {
   const { id } = useParams();
   const { userLocation } = useLocation();
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const reviewsRef = React.useRef<HTMLElement>(null);
   const dest = DESTINATIONS.find(d => d.id === id) || DESTINATIONS[0];
+
+  const destIsFavorite = isFavorite(dest.id);
+
+  const scrollToReviews = () => {
+    reviewsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const distance = userLocation 
     ? calculateDistance(userLocation.lat, userLocation.lng, dest.coordinates.lat, dest.coordinates.lng)
@@ -88,44 +97,73 @@ export const Detail = () => {
             </p>
           </section>
 
-          {/* Facilities */}
+          {/* Culture & Local Insight */}
           <section>
-            <h2 className="text-3xl font-bold text-primary mb-8">Fasilitas Lengkap</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { icon: Wifi, text: 'Wi-Fi Berkecepatan Tinggi (Gratis)' },
-                { icon: Waves, text: 'Kolam Renang Infinity' },
-                { icon: Hotel, text: 'Pusat Spa & Kebugaran' },
-                { icon: Utensils, text: 'Restoran Fine Dining' },
-                { icon: CircleParking, text: 'Parkir Valet Gratis' },
-                { icon: Clock, text: 'Layanan Kamar 24 Jam' }
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-lg hover:bg-surface-container-low transition-colors group">
-                  <div className="w-11 h-11 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center transition-transform group-hover:scale-110">
-                    <item.icon className="w-5 h-5" />
+            <h2 className="text-3xl font-bold text-primary mb-8">Wawasan Budaya & Lokal</h2>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/30 shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+                
+                <div className="space-y-8 relative z-10">
+                  <div className="flex items-start gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary text-on-secondary flex items-center justify-center shrink-0 shadow-lg shadow-secondary/20">
+                      <Route className="w-7 h-7" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-on-background uppercase tracking-tight mb-2">Budaya & Tradisi</h3>
+                      <p className="text-on-surface-variant leading-relaxed font-medium">{dest.culture}</p>
+                    </div>
                   </div>
-                  <span className="text-md font-medium text-on-background">{item.text}</span>
+                  
+                  <div className="flex items-start gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
+                      <Users className="w-7 h-7" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-on-background uppercase tracking-tight mb-2">Bahasa Lokal</h3>
+                      <p className="text-on-surface-variant leading-relaxed font-medium">{dest.language}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-5">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                      <Utensils className="w-7 h-7" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black text-on-background uppercase tracking-tight mb-3">Kuliner Wajib Coba</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {dest.food.map((f, idx) => (
+                          <span key={idx} className="bg-white px-4 py-2 rounded-xl text-xs font-bold text-secondary border border-secondary/10 shadow-sm uppercase tracking-widest">
+                            {f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           </section>
 
           {/* Reviews */}
-          <section>
+          <section ref={reviewsRef} id="reviews">
             <div className="flex justify-between items-end mb-8">
-              <h2 className="text-3xl font-bold text-primary">Ulasan Mendetail</h2>
-              <button className="text-sm font-bold text-secondary hover:underline flex items-center gap-1">
+              <h2 className="text-3xl font-bold text-primary">Pengalaman Wisatawan</h2>
+              <button 
+                onClick={scrollToReviews}
+                className="text-sm font-bold text-secondary hover:underline flex items-center gap-1"
+              >
                 Lihat Semua <ArrowRight className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-8 border border-outline-variant/30 shadow-sm">
+              <div className="bg-white rounded-3xl p-8 border border-outline-variant/30 shadow-sm">
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-full bg-surface-container flex items-center justify-center text-secondary font-bold text-xl">AW</div>
                     <div>
                       <h4 className="font-bold text-on-background">Anita Wijaya</h4>
-                      <p className="text-xs text-on-surface-variant font-medium">Menginap pada Okt 2023</p>
+                      <p className="text-xs text-on-surface-variant font-medium">Mengunjungi {dest.name} pada Okt 2023</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 bg-surface-container-high px-3 py-1 rounded-md">
@@ -133,9 +171,10 @@ export const Detail = () => {
                     <span className="text-sm font-bold">5.0</span>
                   </div>
                 </div>
-                <p className="text-md text-on-surface-variant leading-relaxed italic">
-                  "Pengalaman yang luar biasa. Pemandangan dari kamar langsung menghadap ke alam, sangat tenang. Staf sangat membantu dan ramah. Fasilitas spa-nya adalah salah satu yang terbaik yang pernah saya coba."
-                </p>
+                <div className="text-md text-on-surface-variant leading-relaxed space-y-4 font-medium italic">
+                  <p>"Benar-benar terpukau dengan atmosfer di {dest.name}. Bukan cuma pemandangannya yang juara, tapi interaksi sama warga lokalnya itu yang bikin berkesan banget. Belajar dikit-dikit {dest.language.split(' ')[0]} bikin suasana jadi makin akrab."</p>
+                  <p>"Kulinernya juga juara! Sempet nyobain {dest.food[0]} yang katanya paling otentik di sini, rasanya bener-bener beda sama yang di kota. Kulturnya masih kental banget, wajib banget ke sini kalau mau healing yang berkualitas!"</p>
+                </div>
               </div>
             </div>
           </section>
@@ -147,52 +186,90 @@ export const Detail = () => {
             <div className="bg-white/80 backdrop-blur-xl p-8 rounded-xl border border-outline-variant/20 shadow-2xl">
               <div className="flex justify-between items-center mb-8 pb-6 border-b border-outline-variant/20">
                 <div>
-                  <span className="text-3xl font-bold text-primary">Rp 4.500.000</span>
-                  <span className="text-xs font-semibold text-on-surface-variant block mt-1 tracking-wide">/ kamar / malam</span>
+                  <span className="text-3xl font-bold text-primary">Rp {dest.price.toLocaleString('id-ID')}</span>
+                  <span className="text-xs font-semibold text-on-surface-variant block mt-1 tracking-wide">/ paket / orang</span>
                 </div>
-                <button className="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-rose-500 hover:border-rose-500 transition-all">
-                  <Heart className="w-6 h-6" />
+                <button 
+                  onClick={() => toggleFavorite(dest.id)}
+                  className={`w-12 h-12 rounded-full border flex items-center justify-center transition-all ${
+                    destIsFavorite 
+                      ? 'border-secondary bg-secondary text-white' 
+                      : 'border-outline-variant text-on-surface-variant hover:text-secondary hover:border-secondary'
+                  }`}
+                >
+                  <Heart className={`w-6 h-6 ${destIsFavorite ? 'fill-current' : ''}`} />
                 </button>
               </div>
 
-              <div className="space-y-4 mb-10">
-                <div className="bg-surface p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4 group cursor-pointer hover:border-secondary transition-all">
-                  <Clock className="w-5 h-5 text-on-surface-variant group-hover:text-secondary" />
+              <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/50 mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+                    <Wallet className="w-5 h-5" />
+                  </div>
                   <div>
-                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">Check-in - Check-out</label>
-                    <span className="text-sm font-bold text-on-background">12 Nov - 15 Nov</span>
+                    <h3 className="text-sm font-bold text-primary uppercase tracking-wider">Estimasi Anggaran</h3>
+                    <p className="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">Berdasarkan Analisis Aplikasi</p>
                   </div>
                 </div>
-                <div className="bg-surface p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4 group cursor-pointer hover:border-secondary transition-all">
-                  <Route className="w-5 h-5 text-on-surface-variant group-hover:text-secondary" />
-                  <div>
-                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">Tamu & Kamar</label>
-                    <span className="text-sm font-bold text-on-background">2 Dewasa, 1 Kamar</span>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-on-surface-variant font-medium">Penginapan & Tiket</span>
+                    <span className="font-bold text-on-surface">Rp {(dest.price * 0.65).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                   </div>
+                  <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                    <div className="h-full bg-secondary w-[65%]"></div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-on-surface-variant font-medium">Transportasi Lokal</span>
+                    <span className="font-bold text-on-surface">Rp {(dest.price * 0.15).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                    <div className="h-full bg-secondary w-[15%] opacity-60"></div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-on-surface-variant font-medium">Makan & Aktivitas</span>
+                    <span className="font-bold text-on-surface">Rp {(dest.price * 0.20).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+                    <div className="h-full bg-secondary w-[20%] opacity-40"></div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-outline-variant/30 text-[11px] text-on-surface-variant italic leading-relaxed">
+                  *Estimasi di atas dihitung secara otomatis oleh sistem kami berdasarkan rata-rata biaya harian di {dest.name} untuk kenyamanan maksimal Anda.
                 </div>
               </div>
 
-              <button className="w-full bg-primary text-on-primary py-4 rounded-xl text-md font-bold hover:bg-opacity-90 transition-all shadow-xl flex items-center justify-center gap-2">
-                Pesan Sekarang <ArrowRight className="w-5 h-5" />
-              </button>
-              <p className="text-[10px] font-bold text-center text-on-surface-variant mt-4 uppercase tracking-widest">Anda belum akan dikenakan biaya</p>
-            </div>
-
-            <div className="bg-white rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm">
-              <div className="h-48 bg-surface-container relative">
-                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpglizmh6ww1YCj9KUkxq84ZY5RKO1Zf3fvJex2CS2X_HlXrOzkrZbKpfQjbxhvse_DWbLTmWk4EIy_ZdNXy6gPQzRxtC3B2h6RzvwU4U9JaT6kkBemV2fV-9u8XT4OXQjBfG5uvDcVo70fT3lMkFiolMdtlpE_ko4UKLj__hIB-ZpxFVacYlisjAxXnv-VHz7lDYfWS6S5HyJiLjCQaS4VHsta_Q_9_nWWyhbPsRDpH_fabtDzezp7wYZsx0FElmCfBUphAJuvIA" className="w-full h-full object-cover grayscale opacity-50" alt="Map" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-secondary text-white p-3 rounded-full shadow-2xl animate-bounce">
-                    <MapPin className="w-6 h-6 fill-current" />
-                  </div>
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                  <ShoppingCart className="w-4 h-4" /> Pesan Melalui Mitra
+                </h3>
+                <div className="grid grid-cols-1 gap-3">
+                  {[
+                    { name: 'Traveloka', color: 'bg-[#0194f3]', url: 'https://www.traveloka.com' },
+                    { name: 'Tiket.com', color: 'bg-[#0055ba]', url: 'https://www.tiket.com' },
+                    { name: 'Agoda', color: 'bg-[#873fb6]', url: 'https://www.agoda.com' }
+                  ].map(platform => (
+                    <a 
+                      key={platform.name}
+                      href={platform.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant hover:border-primary transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 ${platform.color} rounded-lg flex items-center justify-center text-[10px] font-black text-white`}>
+                          {platform.name[0]}
+                        </div>
+                        <span className="text-sm font-bold text-on-surface">{platform.name}</span>
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-on-surface-variant group-hover:text-primary transition-colors" />
+                    </a>
+                  ))}
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-sm font-bold text-on-background mb-2">Lokasi Akurat</h3>
-                <p className="text-xs text-on-surface-variant mb-6 leading-relaxed">Jl. Raya Campuhan, Sayan, Kecamatan Ubud, Kabupaten Gianyar, Bali</p>
-                <button className="text-secondary text-sm font-bold hover:underline flex items-center gap-2">
-                  Buka di Maps <ExternalLink className="w-4 h-4" />
-                </button>
               </div>
             </div>
           </div>

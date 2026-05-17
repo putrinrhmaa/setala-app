@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Calculator, Star, ArrowRight, Sparkles, X, MapPin, Sliders, CheckCircle } from 'lucide-react';
+import { Calculator, Star, ArrowRight, Sparkles, X, MapPin, Sliders, CheckCircle, Heart } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 export const Home = () => {
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const featuredDest = DESTINATIONS[1]; // Raja Ampat
 
@@ -97,10 +99,22 @@ export const Home = () => {
               >
                 <div className="relative h-48 overflow-hidden">
                   <img src={dest.imageUrl} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded border border-outline-variant flex items-center gap-1">
-                    <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                    <span className="text-xs font-bold text-on-background">{dest.rating}</span>
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <div className="bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded border border-outline-variant flex items-center gap-1 shadow-sm">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      <span className="text-xs font-bold text-on-background">{dest.rating}</span>
+                    </div>
                   </div>
+                  <button 
+                    onClick={() => toggleFavorite(dest.id)}
+                    className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all z-10 backdrop-blur-md ${
+                      isFavorite(dest.id)
+                        ? 'bg-secondary text-white shadow-lg'
+                        : 'bg-white/20 text-white hover:bg-white/40'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${isFavorite(dest.id) ? 'fill-current' : ''}`} />
+                  </button>
                 </div>
                 <div className="p-6 flex flex-col flex-grow">
                   <div className="flex flex-wrap gap-2 mb-3">

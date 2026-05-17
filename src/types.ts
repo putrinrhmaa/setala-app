@@ -10,6 +10,9 @@ export interface Destination {
   tags: string[];
   matchScore?: number;
   facilities: string[];
+  culture: string;
+  food: string[];
+  language: string;
   coordinates: {
     lat: number;
     lng: number;

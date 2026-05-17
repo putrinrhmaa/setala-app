@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Search, ArrowRight, X } from 'lucide-react';
+import { Menu, Search, ArrowRight, X, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
 import { motion, AnimatePresence } from 'motion/react';
 import { DESTINATIONS } from '../constants';
+import { useLocation as useAppLocation } from '../contexts/LocationContext';
 
 export const Header = () => {
-  const location = useLocation();
+  const routerLocation = useLocation();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { userLocation } = useAppLocation();
 
   const filteredDestinations = searchQuery
     ? DESTINATIONS.filter(d => 
@@ -21,14 +23,25 @@ export const Header = () => {
   return (
     <header className={`sticky top-0 z-50 w-full transition-all bg-surface shadow-sm`}>
       <div className="flex justify-between items-center w-full px-4 md:px-12 max-w-7xl mx-auto h-20">
-        <Link to="/" className="text-2xl font-display font-bold text-primary flex items-center gap-2 tracking-tight group">
-          <Logo className="w-9 h-9 text-primary transition-transform group-hover:scale-105" />
-          <span>Setala</span>
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link to="/" className="text-2xl font-display font-bold text-primary flex items-center gap-2 tracking-tight group">
+            <Logo className="w-9 h-9 text-primary transition-transform group-hover:scale-105" />
+            <span>Setala</span>
+          </Link>
+
+          {userLocation && (
+            <div className="hidden lg:flex items-center gap-2 text-[10px] font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-wider animate-in fade-in slide-in-from-left-2 transition-all">
+              <MapPin className="w-3 h-3" />
+              Lokasi Aktif
+            </div>
+          )}
+        </div>
+        
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/" className={`text-sm font-semibold transition-colors duration-200 ${location.pathname === '/' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Beranda</Link>
-          <Link to="/results" className={`text-sm font-semibold transition-colors duration-200 ${location.pathname === '/results' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Peringkat</Link>
-          <Link to="/compare" className={`text-sm font-semibold transition-colors duration-200 ${location.pathname === '/compare' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Bandingkan</Link>
+          <Link to="/" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Beranda</Link>
+          <Link to="/results" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/results' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Peringkat</Link>
+          <Link to="/compare" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/compare' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Bandingkan</Link>
+          <Link to="/favorites" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/favorites' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Favorit</Link>
         </nav>
         <div className="flex items-center gap-6">
           <button 

@@ -9,13 +9,12 @@ export const Criteria = () => {
   const navigate = useNavigate();
   const { userLocation, isLoading, error, requestLocation } = useLocation();
   const [weights, setWeights] = useState({
-    budget: 30,
-    distance: 20,
-    facilities: 30,
-    rating: 20
+    budget: 40,
+    distance: 30,
+    rating: 30
   });
 
-  const total = weights.budget + weights.distance + weights.facilities + weights.rating;
+  const total = weights.budget + weights.distance + weights.rating;
 
   const handleWeightChange = (key: keyof typeof weights, value: number) => {
     setWeights(prev => ({ ...prev, [key]: value }));
@@ -23,7 +22,12 @@ export const Criteria = () => {
 
   const handleCalculate = () => {
     if (total === 100) {
-      navigate('/results');
+      const params = new URLSearchParams({
+        b: weights.budget.toString(),
+        d: weights.distance.toString(),
+        r: weights.rating.toString()
+      });
+      navigate(`/results?${params.toString()}`);
     } else {
       alert('Total bobot harus 100%');
     }
@@ -133,36 +137,6 @@ export const Criteria = () => {
                 />
               </div>
 
-              {/* Fasilitas */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-surface-container p-3 rounded-lg text-secondary">
-                      <Hotel className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <label className="text-sm font-bold text-on-surface block">Fasilitas</label>
-                      <p className="text-xs text-on-surface-variant">Kelengkapan amenitas dan layanan</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 bg-surface-container-low px-3 py-1.5 rounded-md border border-outline-variant">
-                    <input 
-                      type="number" 
-                      value={weights.facilities} 
-                      onChange={(e) => handleWeightChange('facilities', parseInt(e.target.value) || 0)}
-                      className="w-12 bg-transparent text-right border-none focus:ring-0 text-sm font-bold p-0"
-                    />
-                    <span className="text-sm font-bold text-on-surface-variant">%</span>
-                  </div>
-                </div>
-                <input 
-                  type="range" 
-                  value={weights.facilities} 
-                  onChange={(e) => handleWeightChange('facilities', parseInt(e.target.value))}
-                  className="w-full accent-secondary h-1.5 bg-surface-container rounded-lg cursor-pointer"
-                />
-              </div>
-
               {/* Rating */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -196,51 +170,32 @@ export const Criteria = () => {
           </motion.div>
         </div>
 
-        {/* Right Column: Filters */}
+        {/* Right Column: Calculations & Submit */}
         <div className="lg:col-span-5 space-y-6">
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-surface-container-lowest rounded-xl p-8 border border-surface-variant shadow-sm"
+            className="bg-surface-container-lowest rounded-xl p-8 border border-surface-variant shadow-sm h-full flex flex-col justify-center items-center text-center"
           >
-            <h2 className="text-2xl font-bold text-primary mb-8 pb-6 border-b border-surface-variant">Filter Fasilitas</h2>
-            <div className="flex flex-wrap gap-3 mb-10">
-              {[
-                { label: 'Wi-Fi', icon: Wifi },
-                { label: 'Kolam Renang', icon: Waves },
-                { label: 'Parkir', icon: CircleParking },
-                { label: 'Sarapan', icon: Utensils },
-                { label: 'Gym', icon: Dumbbell }
-              ].map((item, idx) => (
-                <label key={idx} className="cursor-pointer group">
-                  <input type="checkbox" className="peer sr-only" defaultChecked={idx % 2 === 0} />
-                  <div className="px-4 py-2.5 rounded-full border border-outline-variant text-sm font-bold text-on-surface-variant peer-checked:bg-secondary-container peer-checked:text-on-secondary-container peer-checked:border-secondary-container transition-all flex items-center gap-2 group-hover:border-secondary">
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </div>
-                </label>
-              ))}
+            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
+              <Calculator className="w-10 h-10" />
             </div>
-
-            <div className="rounded-lg overflow-hidden h-40 mb-8 relative bg-surface-container">
-              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiqe6dbt5tZrCiHI-ssAJ8foMEzwZd0Sabkrm3ln9JEHuOO5uJ46BQ6W8yjCj7FZ82o4l6eEwz2ughM1xy1AHS1cpq_clajfidJOclFK-x-Xg9nsYyqZtWcSwJdWFN0Ux_2-fucmaRh5j9DHDkQpityZzbZHb3eGV8-gsNVDwqk2zRq79QHng3uNP6g5Cif9juwKdys0OVpgnc8qtNGBzfEpUO7Ddq7HKb60HAwsAMBdJhyD8sck5Myx7llzuJXReJmhG5z7pHXCg" className="w-full h-full object-cover" alt="Map View" />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-4">
-                <p className="text-on-primary text-xs font-bold flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> 
-                  Area Pencarian: Bali, Indonesia
-                </p>
-              </div>
-            </div>
+            <h2 className="text-2xl font-bold text-primary mb-4">Siap untuk Memilih?</h2>
+            <p className="text-on-surface-variant mb-10 max-w-sm">
+              Kami akan menghitung skor kecocokan setiap destinasi berdasarkan pembobotan yang Anda tentukan di panel sebelah kiri.
+            </p>
 
             <button 
               onClick={handleCalculate}
-              className="w-full bg-primary text-on-primary py-4 rounded-lg text-sm font-bold hover:bg-opacity-90 transition-all shadow-md flex justify-center items-center gap-3"
+              className="w-full bg-primary text-on-primary py-5 rounded-2xl text-lg font-black uppercase tracking-widest hover:bg-primary/90 transition-all shadow-xl hover:shadow-primary/20 active:scale-95 flex justify-center items-center gap-4"
             >
-              <Calculator className="w-5 h-5" />
               Hitung Peringkat
+              <Calculator className="w-6 h-6" />
             </button>
-            <p className="text-xs text-on-surface-variant text-center mt-4">Algoritma DSS akan memproses data berdasarkan bobot di atas.</p>
+            <p className="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mt-6 opacity-60">
+              Powered by Setala DSS Algorithm
+            </p>
           </motion.div>
         </div>
       </div>
