@@ -16,14 +16,14 @@ export const Favorites = () => {
   return (
     <div className="min-h-screen bg-surface-container-lowest pb-20">
       {/* Header */}
-      <div className="bg-primary text-on-primary pt-12 pb-8 px-6 sticky top-0 z-50 shadow-lg rounded-b-[40px]">
+      <div className="bg-primary text-on-primary py-4 md:py-6 px-6 sticky top-0 z-50 shadow-md rounded-b-3xl">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-all">
+          <Link to="/" className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-white/20 transition-all">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <h1 className="text-xl font-black uppercase tracking-widest">Favorit Saya</h1>
+          <h1 className="text-lg md:text-xl font-black uppercase tracking-widest">Favorit Saya</h1>
           <div className="w-10 h-10 flex items-center justify-center">
-            <Heart className="w-6 h-6 fill-current text-secondary" />
+            <Heart className="w-5 h-5 fill-current text-secondary" />
           </div>
         </div>
       </div>

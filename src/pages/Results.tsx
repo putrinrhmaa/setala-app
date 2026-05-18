@@ -15,18 +15,20 @@ export const Results = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  // Get weights from URL or use defaults
+  // Get weights from URL
+  const hasWeights = searchParams.get('b') && searchParams.get('d') && searchParams.get('r');
+  
   const weights = {
-    budget: parseInt(searchParams.get('b') || '40'),
-    distance: parseInt(searchParams.get('d') || '30'),
-    rating: parseInt(searchParams.get('r') || '30')
+    budget: parseInt(searchParams.get('b') || '0'),
+    distance: parseInt(searchParams.get('d') || '0'),
+    rating: parseInt(searchParams.get('r') || '0')
   };
 
   React.useEffect(() => {
-    if (!userLocation) {
+    if (hasWeights && !userLocation) {
       requestLocation();
     }
-  }, [userLocation, requestLocation]);
+  }, [hasWeights, userLocation, requestLocation]);
 
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => 
@@ -35,6 +37,7 @@ export const Results = () => {
   };
 
   const rankedDestinations = React.useMemo(() => {
+    if (!hasWeights) return [];
     // 1. Calculate distances first
     const withDistance = DESTINATIONS.map(dest => {
       let dist = 0;
@@ -83,163 +86,190 @@ export const Results = () => {
   }, [userLocation, weights]);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-16">
-      <div className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary">Hasil Rekomendasi Destinasi</h1>
-        <p className="text-lg text-on-surface-variant mt-3 max-w-3xl">Berdasarkan preferensi Anda, berikut adalah urutan destinasi yang paling cocok. Jarak dihitung dari lokasi terdeteksi Anda.</p>
-        {!userLocation ? (
-          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <button 
-              type="button"
-              onClick={requestLocation}
-              disabled={isLoading}
-              className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50 active:scale-95"
+    <div className="w-full max-w-7xl mx-auto px-4 md:px-12 py-8 md:py-12">
+      {!hasWeights ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-surface-container-low border border-outline-variant p-8 md:p-12 rounded-[40px] max-w-xl shadow-sm"
+          >
+            <div className="w-20 h-20 bg-amber-100 rounded-3xl flex items-center justify-center text-amber-600 mx-auto mb-8">
+              <SlidersHorizontal className="w-10 h-10" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-black text-primary mb-6 uppercase tracking-tight">Peringkat Belum Tersedia</h1>
+            <p className="text-base text-on-surface-variant leading-relaxed mb-10 font-medium">
+              Sistem membutuhkan data preferensi Anda untuk melakukan perhitungan peringkat. Silakan <span className="text-secondary font-bold">tentukan bobot kriteria</span> perjalanan Anda terlebih dahulu.
+            </p>
+            <Link 
+              to="/criteria" 
+              className="inline-flex bg-primary text-on-primary px-10 py-4 rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:opacity-90 transition-all items-center gap-3 active:scale-95"
             >
-              <LocateFixed className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-              {isLoading ? 'Mendeteksi Lokasi...' : 'Aktifkan Deteksi Lokasi'}
-            </button>
-            {error && <p className="text-sm text-error font-medium bg-error/10 px-4 py-2 rounded-lg italic">Gagal: {error}</p>}
-            {!isLoading && !error && <p className="text-sm text-amber-600 font-semibold italic">Catatan: Deteksi lokasi belum aktif, jarak tampil sebagai 0km.</p>}
+              Mulai Pembobotan
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      ) : (
+        <>
+          <div className="mb-8">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-primary tracking-tight">Hasil Rekomendasi Destinasi</h1>
+            <p className="text-sm md:text-base text-on-surface-variant mt-2 max-w-3xl font-medium">Berdasarkan preferensi Anda, berikut adalah urutan destinasi yang paling cocok. Jarak dihitung dari lokasi terdeteksi Anda.</p>
+            {!userLocation ? (
+              <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <button 
+                  type="button"
+                  onClick={requestLocation}
+                  disabled={isLoading}
+                  className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50 active:scale-95"
+                >
+                  <LocateFixed className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  {isLoading ? 'Mendeteksi Lokasi...' : 'Aktifkan Deteksi Lokasi'}
+                </button>
+                {error && <p className="text-sm text-error font-medium bg-error/10 px-4 py-2 rounded-lg italic">Gagal: {error}</p>}
+                {!isLoading && !error && <p className="text-sm text-amber-600 font-semibold italic">Catatan: Deteksi lokasi belum aktif, jarak tampil sebagai 0km.</p>}
+              </div>
+            ) : (
+              <div className="mt-4 flex items-center gap-2 text-sm text-secondary font-bold bg-secondary/10 w-fit px-4 py-2 rounded-lg">
+                <CheckCircle2 className="w-4 h-4" />
+                Lokasi Berhasil Terdeteksi
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="mt-4 flex items-center gap-2 text-sm text-secondary font-bold bg-secondary/10 w-fit px-4 py-2 rounded-lg">
-            <CheckCircle2 className="w-4 h-4" />
-            Lokasi Berhasil Terdeteksi
-          </div>
-        )}
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Sidebar: Criteria Weights */}
-        <aside className="col-span-1 md:col-span-4 lg:col-span-3">
-          <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm">
-            <h2 className="text-xl font-bold text-on-surface mb-8 flex items-center gap-3">
-              <SlidersHorizontal className="w-5 h-5 text-secondary" />
-              Bobot Kriteria
-            </h2>
-            
-            <div className="space-y-8">
-              {[
-                { label: 'Anggaran', weight: weights.budget, color: 'bg-secondary', icon: Wallet },
-                { label: 'Rating', weight: weights.rating, color: 'bg-primary-container', icon: Star },
-                { label: 'Jarak', weight: weights.distance, color: 'bg-surface-tint', icon: MapPin }
-              ].map((item, idx) => (
-                <div key={idx}>
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-2">
-                      <item.icon className="w-3 h-3 text-secondary" />
-                      <span className="text-sm font-semibold text-on-surface-variant">{item.label}</span>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            {/* Sidebar: Criteria Weights */}
+            <aside className="col-span-1 md:col-span-4 lg:col-span-3">
+              <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm">
+                <h2 className="text-xl font-bold text-on-surface mb-8 flex items-center gap-3">
+                  <SlidersHorizontal className="w-5 h-5 text-secondary" />
+                  Bobot Kriteria
+                </h2>
+                
+                <div className="space-y-8">
+                  {[
+                    { label: 'Anggaran', weight: weights.budget, color: 'bg-secondary', icon: Wallet },
+                    { label: 'Rating', weight: weights.rating, color: 'bg-primary-container', icon: Star },
+                    { label: 'Jarak', weight: weights.distance, color: 'bg-surface-tint', icon: MapPin }
+                  ].map((item, idx) => (
+                    <div key={idx}>
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="flex items-center gap-2">
+                          <item.icon className="w-3 h-3 text-secondary" />
+                          <span className="text-sm font-semibold text-on-surface-variant">{item.label}</span>
+                        </div>
+                        <span className="text-sm font-bold text-primary">{item.weight}%</span>
+                      </div>
+                      <div className="w-full bg-surface-container-high rounded-full h-2">
+                        <div className={`${item.color} h-2 rounded-full transition-all duration-1000`} style={{ width: `${item.weight}%` }}></div>
+                      </div>
                     </div>
-                    <span className="text-sm font-bold text-primary">{item.weight}%</span>
-                  </div>
-                  <div className="w-full bg-surface-container-high rounded-full h-2">
-                    <div className={`${item.color} h-2 rounded-full transition-all duration-1000`} style={{ width: `${item.weight}%` }}></div>
-                   </div>
+                  ))}
                 </div>
+
+                <div className="mt-12 pt-8 border-t border-outline-variant">
+                  <Link to="/criteria" className="w-full py-3 px-4 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                    <Edit3 className="w-4 h-4" />
+                    Ubah Kriteria
+                  </Link>
+                </div>
+              </div>
+            </aside>
+
+            {/* Destination List */}
+            <div className="col-span-1 md:col-span-8 lg:col-span-9 flex flex-col gap-8">
+              <div className="flex justify-between items-center px-2">
+                <h2 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Urutan Teratas (Kecocokan Tertinggi)</h2>
+                <span className="text-xs text-secondary font-bold bg-secondary/10 px-3 py-1 rounded-full">Top {Math.min(5, rankedDestinations.length)} Rekomendasi</span>
+              </div>
+
+              {rankedDestinations.slice(0, 5).map((dest, idx) => (
+                <motion.div 
+                  key={dest.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  className={`bg-surface-container-lowest border rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row relative group ${selectedIds.includes(dest.id) ? 'border-secondary ring-2 ring-secondary/20' : 'border-outline-variant'} scale-100`}
+                >
+                  <div className={`absolute top-4 left-4 ${idx === 0 ? 'bg-secondary' : idx < 3 ? 'bg-primary' : 'bg-outline'} text-on-primary rounded-full w-10 h-10 flex items-center justify-center font-bold z-10 shadow-md transform group-hover:scale-110 transition-transform`}>
+                    #{idx + 1}
+                  </div>
+                  
+                  <div className="w-full sm:w-1/3 h-48 sm:h-auto relative">
+                    <img src={dest.imageUrl} alt={dest.name} className="w-full h-full object-cover" />
+                    <button 
+                      onClick={() => toggleFavorite(dest.id)}
+                      className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all z-20 backdrop-blur-md ${
+                        isFavorite(dest.id)
+                          ? 'bg-secondary text-white shadow-lg'
+                          : 'bg-white/20 text-white hover:bg-white/40'
+                      }`}
+                    >
+                      <Heart className={`w-5 h-5 ${isFavorite(dest.id) ? 'fill-current' : ''}`} />
+                    </button>
+                  </div>
+
+                  <div className="p-8 flex-grow flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <h3 className="text-2xl font-bold text-on-surface">{dest.name}</h3>
+                        <div className="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full border border-secondary/20">
+                          <CheckCircle2 className="w-4 h-4 fill-current" />
+                          <span className="text-xs font-bold">{dest.calculatedScore}% Kecocokan</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap gap-4 mb-6">
+                        <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
+                          <Wallet className="w-4 h-4 text-secondary" />
+                          {dest.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })}
+                        </div>
+                        <span className="text-outline-variant hidden sm:block">•</span>
+                        <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
+                          <MapPin className="w-4 h-4 text-secondary" />
+                          {dest.distanceCalc > 0 ? `${dest.distanceCalc.toLocaleString('id-ID')} km` : 'Mendeteksi Lokasi...'}
+                        </div>
+                        <span className="text-outline-variant hidden sm:block">•</span>
+                        <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
+                          <Star className="w-4 h-4 text-secondary fill-secondary" />
+                          {dest.rating}/5
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 flex-wrap">
+                        {dest.tags.map(tag => (
+                          <span key={tag} className="bg-surface-container-low border border-secondary/30 text-secondary px-2.5 py-1 rounded-md text-xs font-semibold">{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-8 flex items-center justify-between">
+                      <div className="flex items-center gap-6">
+                        <Link to={`/detail/${dest.id}`} className="text-sm font-bold text-secondary hover:underline flex items-center gap-1">
+                          Lihat Detail
+                          <ChevronRight className="w-4 h-4" />
+                        </Link>
+                        <label className="flex items-center gap-3 cursor-pointer group">
+                          <span className="text-sm font-bold text-primary group-hover:text-secondary transition-colors">Bandingkan</span>
+                          <input 
+                            type="checkbox" 
+                            checked={selectedIds.includes(dest.id)}
+                            onChange={() => toggleSelect(dest.id)}
+                            className="w-5 h-5 text-secondary border-outline rounded focus:ring-secondary focus:ring-offset-0" 
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
-
-            <div className="mt-12 pt-8 border-t border-outline-variant">
-              <Link to="/criteria" className="w-full py-3 px-4 border border-outline rounded-lg text-sm font-bold text-on-surface hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
-                <Edit3 className="w-4 h-4" />
-                Ubah Kriteria
-              </Link>
-            </div>
           </div>
-        </aside>
-
-        {/* Destination List */}
-        <div className="col-span-1 md:col-span-8 lg:col-span-9 flex flex-col gap-8">
-          <div className="flex justify-between items-center px-2">
-            <h2 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Urutan Teratas (Kecocokan Tertinggi)</h2>
-            <span className="text-xs text-secondary font-bold bg-secondary/10 px-3 py-1 rounded-full">Top {Math.min(5, rankedDestinations.length)} Rekomendasi</span>
-          </div>
-
-          {rankedDestinations.slice(0, 5).map((dest, idx) => (
-            <motion.div 
-              key={dest.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className={`bg-surface-container-lowest border rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col sm:flex-row relative group ${selectedIds.includes(dest.id) ? 'border-secondary ring-2 ring-secondary/20' : 'border-outline-variant'} scale-100`}
-            >
-              <div className={`absolute top-4 left-4 ${idx === 0 ? 'bg-secondary' : idx < 3 ? 'bg-primary' : 'bg-outline'} text-on-primary rounded-full w-10 h-10 flex items-center justify-center font-bold z-10 shadow-md transform group-hover:scale-110 transition-transform`}>
-                #{idx + 1}
-              </div>
-              
-              <div className="w-full sm:w-1/3 h-48 sm:h-auto relative">
-                <img src={dest.imageUrl} alt={dest.name} className="w-full h-full object-cover" />
-                <button 
-                  onClick={() => toggleFavorite(dest.id)}
-                  className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all z-20 backdrop-blur-md ${
-                    isFavorite(dest.id)
-                      ? 'bg-secondary text-white shadow-lg'
-                      : 'bg-white/20 text-white hover:bg-white/40'
-                  }`}
-                >
-                  <Heart className={`w-5 h-5 ${isFavorite(dest.id) ? 'fill-current' : ''}`} />
-                </button>
-              </div>
-
-              <div className="p-8 flex-grow flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-2xl font-bold text-on-surface">{dest.name}</h3>
-                    <div className="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full border border-secondary/20">
-                      <CheckCircle2 className="w-4 h-4 fill-current" />
-                      <span className="text-xs font-bold">{dest.calculatedScore}% Kecocokan</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-4 mb-6">
-                    <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
-                      <Wallet className="w-4 h-4 text-secondary" />
-                      {dest.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })}
-                    </div>
-                    <span className="text-outline-variant hidden sm:block">•</span>
-                    <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
-                      <MapPin className="w-4 h-4 text-secondary" />
-                      {dest.distanceCalc > 0 ? `${dest.distanceCalc.toLocaleString('id-ID')} km` : 'Mendeteksi Lokasi...'}
-                    </div>
-                    <span className="text-outline-variant hidden sm:block">•</span>
-                    <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
-                      <Star className="w-4 h-4 text-secondary fill-secondary" />
-                      {dest.rating}/5
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 flex-wrap">
-                    {dest.tags.map(tag => (
-                      <span key={tag} className="bg-surface-container-low border border-secondary/30 text-secondary px-2.5 py-1 rounded-md text-xs font-semibold">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-8 flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <Link to={`/detail/${dest.id}`} className="text-sm font-bold text-secondary hover:underline flex items-center gap-1">
-                      Lihat Detail
-                      <ChevronRight className="w-4 h-4" />
-                    </Link>
-                    <label className="flex items-center gap-3 cursor-pointer group">
-                      <span className="text-sm font-bold text-primary group-hover:text-secondary transition-colors">Bandingkan</span>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedIds.includes(dest.id)}
-                        onChange={() => toggleSelect(dest.id)}
-                        className="w-5 h-5 text-secondary border-outline rounded focus:ring-secondary focus:ring-offset-0" 
-                      />
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Floating Action Bar */}
-      {selectedIds.length > 0 && (
+      {hasWeights && selectedIds.length > 0 && (
         <motion.div 
           initial={{ y: 100 }}
           animate={{ y: 0 }}

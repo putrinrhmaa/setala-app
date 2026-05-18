@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
+import { Explore } from './pages/Explore';
 import { Criteria } from './pages/Criteria';
 import { Results } from './pages/Results';
 import { Comparison } from './pages/Comparison';
@@ -18,6 +19,7 @@ export default function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/explore" element={<Explore />} />
               <Route path="/criteria" element={<Criteria />} />
               <Route path="/results" element={<Results />} />
               <Route path="/compare" element={<Comparison />} />
