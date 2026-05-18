@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
 import { Logo } from './Logo';
 import { motion, AnimatePresence } from 'motion/react';
+import { X } from 'lucide-react';
 
 export const Footer = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -46,37 +46,39 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-surface-container w-full py-12 mt-12">
-      <div className="px-4 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6 max-w-7xl mx-auto">
+    <footer className="bg-surface-container w-full py-8 mt-12 border-t border-outline-variant/30">
+      <div className="px-4 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
         <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
-          <span className="text-2xl font-display font-bold text-primary flex items-center gap-2 tracking-tight">
-            <Logo className="w-8 h-8 text-primary" />
+          <span className="text-xl font-display font-bold text-primary flex items-center gap-2 tracking-tight">
+            <Logo className="w-6 h-6 text-primary" />
             Setala
           </span>
-          <p className="text-sm text-on-surface-variant">© 2024 Setala Travel DSS. Seluruh hak cipta dilindungi.</p>
+          <p className="text-[11px] md:text-xs text-on-surface-variant max-w-[240px]">Temukan destinasi impian Anda dengan perhitungan cerdas berbasis prioritas.</p>
+          <p className="text-[10px] text-on-surface-variant/60 mt-1">© 2024 Setala Travel DSS.</p>
         </div>
-        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+
+        <nav className="flex flex-wrap justify-center gap-x-5 gap-y-1">
           <button 
             onClick={() => setActiveModal('about')}
-            className="text-sm font-semibold text-on-surface-variant hover:text-secondary hover:underline transition-all"
+            className="text-[11px] font-bold text-on-surface-variant hover:text-secondary uppercase tracking-wider transition-all"
           >
-            Tentang Kami
+            Tentang
           </button>
           <button 
             onClick={() => setActiveModal('privacy')}
-            className="text-sm font-semibold text-on-surface-variant hover:text-secondary hover:underline transition-all"
+            className="text-[11px] font-bold text-on-surface-variant hover:text-secondary uppercase tracking-wider transition-all"
           >
-            Kebijakan Privasi
+            Privasi
           </button>
           <button 
             onClick={() => setActiveModal('help')}
-            className="text-sm font-semibold text-on-surface-variant hover:text-secondary hover:underline transition-all"
+            className="text-[11px] font-bold text-on-surface-variant hover:text-secondary uppercase tracking-wider transition-all"
           >
             Bantuan
           </button>
           <button 
             onClick={() => setActiveModal('contact')}
-            className="text-sm font-semibold text-on-surface-variant hover:text-secondary hover:underline transition-all"
+            className="text-[11px] font-bold text-on-surface-variant hover:text-secondary uppercase tracking-wider transition-all"
           >
             Kontak
           </button>

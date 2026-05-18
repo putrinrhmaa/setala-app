@@ -37,18 +37,15 @@ export const Header = () => {
           <Link to="/compare" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/compare' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Bandingkan</Link>
           <Link to="/favorites" className={`text-sm font-semibold transition-colors duration-200 ${routerLocation.pathname === '/favorites' ? 'text-secondary border-b-2 border-secondary pb-1' : 'text-on-surface-variant hover:text-secondary'}`}>Favorit</Link>
         </nav>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
           <button 
             onClick={() => setIsSearchOpen(true)}
-            className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors text-on-surface-variant"
           >
             <Search className="w-5 h-5" />
           </button>
-          <Link to="/criteria" className="bg-primary text-on-primary text-sm font-semibold px-6 py-2.5 rounded-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm">
-            Mulai
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <button className="md:hidden text-on-surface-variant">
+          
+          <button className="md:hidden text-on-surface-variant ml-2">
             <Menu className="w-7 h-7" />
           </button>
         </div>

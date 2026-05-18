@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, Star, MapPin, Wallet, Route, Thermometer, Wifi, Waves, Hotel, Utensils, CircleParking, Clock, Heart, ArrowRight, ExternalLink, Grid3X3, ShoppingCart, Users } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
@@ -10,6 +10,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 
 export const Detail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { userLocation } = useLocation();
   const { toggleFavorite, isFavorite } = useFavorites();
   const reviewsRef = React.useRef<HTMLElement>(null);
@@ -34,9 +35,13 @@ export const Detail = () => {
             <img src={dest.imageUrl} alt={dest.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-on-background/60 to-transparent"></div>
             
-            <Link to="/results" className="absolute top-6 left-6 md:hidden bg-surface/80 p-2 rounded-full backdrop-blur-sm text-primary flex items-center justify-center shadow-sm">
-              <ArrowLeft className="w-6 h-6" />
-            </Link>
+            <button 
+              onClick={() => navigate(-1)} 
+              className="absolute top-6 left-6 bg-white/90 p-2.5 rounded-xl backdrop-blur-md text-primary flex items-center justify-center shadow-xl z-30 hover:bg-white transition-all active:scale-95 group border border-white/50"
+              title="Kembali"
+            >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
 
             <div className="absolute bottom-10 left-10 text-on-primary">
               <div className="flex items-center gap-2 mb-3">

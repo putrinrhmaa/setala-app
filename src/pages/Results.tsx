@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { SlidersHorizontal, MapPin, Star, Wallet, CheckCircle2, ArrowRightLeft, Heart, ChevronRight, Edit3, LocateFixed, ArrowRight, Hotel } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { SlidersHorizontal, MapPin, Star, Wallet, CheckCircle2, ArrowRightLeft, Heart, ChevronRight, Edit3, LocateFixed, ArrowRight, Hotel, Info, X } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
 import { useFavorites } from '../contexts/FavoritesContext';
 
@@ -14,6 +14,7 @@ export const Results = () => {
   const { userLocation, isLoading, error, requestLocation } = useLocation();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isSAWModalOpen, setIsSAWModalOpen] = useState(false);
 
   // Get weights from URL
   const hasWeights = searchParams.get('b') && searchParams.get('d') && searchParams.get('r');
@@ -114,7 +115,16 @@ export const Results = () => {
         <>
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold text-primary tracking-tight">Hasil Rekomendasi Destinasi</h1>
-            <p className="text-sm md:text-base text-on-surface-variant mt-2 max-w-3xl font-medium">Berdasarkan preferensi Anda, berikut adalah urutan destinasi yang paling cocok. Jarak dihitung dari lokasi terdeteksi Anda.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
+              <p className="text-sm md:text-base text-on-surface-variant max-w-2xl font-medium">Berdasarkan preferensi Anda, berikut adalah urutan destinasi yang paling cocok. Jarak dihitung dari lokasi terdeteksi Anda.</p>
+              <button 
+                onClick={() => setIsSAWModalOpen(true)}
+                className="flex items-center gap-2 bg-primary/5 px-3 py-1.5 rounded-lg border border-primary/10 w-fit hover:bg-primary/10 transition-colors group cursor-help"
+              >
+                <Info className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">Metode SAW (Weighted Scoring)</span>
+              </button>
+            </div>
             {!userLocation ? (
               <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <button 
@@ -302,6 +312,77 @@ export const Results = () => {
       
       {/* Spacer for floating bar */}
       {selectedIds.length > 0 && <div className="h-32"></div>}
+
+      <AnimatePresence>
+        {isSAWModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSAWModalOpen(false)}
+              className="absolute inset-0 bg-primary/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="relative w-full max-w-2xl bg-white rounded-[32px] shadow-2xl overflow-hidden p-8 md:p-10"
+            >
+              <button 
+                onClick={() => setIsSAWModalOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                  <Info className="w-6 h-6" />
+                </div>
+                <h2 className="text-2xl font-black text-primary uppercase tracking-tight">Transparansi Perhitungan (SAW)</h2>
+              </div>
+
+              <div className="space-y-6 text-on-surface-variant text-sm md:text-base leading-relaxed">
+                <p>Kami menggunakan metode <strong>Simple Additive Weighting (SAW)</strong> atau sering disebut <i>Weighted Scoring Model</i> untuk menentukan peringkat destinasi Anda secara objektif.</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-5 bg-surface-container-low rounded-2xl border border-outline-variant">
+                    <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
+                       <CheckCircle2 className="w-4 h-4 text-secondary" />
+                       1. Normalisasi Data
+                    </h3>
+                    <p className="text-xs">Setiap kriteria diubah menjadi skala 0-1 agar bisa dibandingkan. <strong>Rating</strong> (semakin besar semakin baik) dan <strong>Biaya/Jarak</strong> (semakin kecil semakin baik).</p>
+                  </div>
+                  <div className="p-5 bg-surface-container-low rounded-2xl border border-outline-variant">
+                    <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
+                       <CheckCircle2 className="w-4 h-4 text-secondary" />
+                       2. Pembobotan
+                    </h3>
+                    <p className="text-xs">Nilai normalisasi dikalikan dengan persentase bobot yang Anda tentukan (Budget: {weights.budget}%, Jarak: {weights.distance}%, Rating: {weights.rating}%).</p>
+                  </div>
+                </div>
+
+                <div className="p-5 bg-secondary/5 rounded-2xl border border-secondary/10">
+                  <h3 className="font-bold text-secondary mb-2 uppercase text-xs tracking-widest">Rumus Total Skor:</h3>
+                  <code className="text-xs md:text-sm font-mono block bg-white/50 p-3 rounded-lg border border-secondary/10">
+                    Total = (Normalisasi_Rating × {weights.rating}%) + (Normalisasi_Budget × {weights.budget}%) + (Normalisasi_Jarak × {weights.distance}%)
+                  </code>
+                </div>
+
+                <p className="text-xs italic text-on-surface-variant/70">Metode ini memastikan bahwa peringkat yang dihasilkan benar-benar merepresentasikan prioritas unik Anda, bukan sekadar urutan umum.</p>
+              </div>
+              
+              <button 
+                onClick={() => setIsSAWModalOpen(false)}
+                className="mt-8 w-full bg-primary text-on-primary py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
+              >
+                Saya Mengerti
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

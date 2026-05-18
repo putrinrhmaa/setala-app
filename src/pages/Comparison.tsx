@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import { motion } from 'motion/react';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Wallet, MapPin, Star, CheckCircle2, ChevronRight, Info, ArrowRightLeft, LocateFixed, TriangleAlert, ArrowRight } from 'lucide-react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Wallet, MapPin, Star, CheckCircle2, ChevronRight, Info, ArrowRightLeft, LocateFixed, TriangleAlert, ArrowRight, ArrowLeft } from 'lucide-react';
 import { DESTINATIONS } from '../constants';
 import { useLocation } from '../contexts/LocationContext';
 import { calculateDistance } from '../utils';
 
 export const Comparison = () => {
+  const navigate = useNavigate();
   const { userLocation, isLoading, error, requestLocation } = useLocation();
   const [searchParams] = useSearchParams();
   
@@ -37,6 +38,11 @@ export const Comparison = () => {
       return { ...dest, calculatedDistance: distance };
     });
   }, [userLocation, selectedIds]);
+
+  const cheapestId = useMemo(() => {
+    if (comparedDestinations.length === 0) return null;
+    return [...comparedDestinations].sort((a, b) => a.price - b.price)[0].id;
+  }, [comparedDestinations]);
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-12 py-4 md:py-8">
@@ -73,6 +79,20 @@ export const Comparison = () => {
         </div>
       ) : (
         <div className="space-y-6">
+          <div className="flex items-center gap-4 mb-2">
+            <button 
+              onClick={() => navigate(-1)}
+              className="bg-surface-container-high p-2.5 rounded-xl text-primary hover:bg-surface-container-highest transition-all active:scale-95 flex items-center justify-center shadow-sm border border-outline-variant"
+              title="Kembali"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-xl font-black text-primary uppercase tracking-tight">Perbandingan Destinasi</h1>
+              <p className="text-xs text-on-surface-variant font-medium">Bandingkan fitur utama dari destinasi pilihan Anda</p>
+            </div>
+          </div>
+
           <div className="overflow-x-auto pb-6">
             <div className={`min-w-[800px] grid gap-4 items-start`} style={{ gridTemplateColumns: `repeat(${comparedDestinations.length}, 1fr)` }}>
               {comparedDestinations.map(dest => (
@@ -99,7 +119,7 @@ export const Comparison = () => {
                         <span className="text-xs font-bold text-secondary">
                           {dest.price.toLocaleString('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 })}
                         </span>
-                        {dest.id === '1' && (
+                        {dest.id === cheapestId && (
                           <div className="mt-1 flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3 text-secondary" />
                             <span className="text-[9px] font-bold text-secondary uppercase tracking-tighter">Pilihan Hemat</span>
